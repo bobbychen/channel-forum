@@ -8,19 +8,17 @@ const logger = require('morgan');
 
 class App {
   public app: express.Application;
-  public port: number;
 
-  constructor(controllers: Controller[],port:number) {
+  constructor(controllers: Controller[]) {
     this.app = express();
-    this.port = port;
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`App listening on the port ${this.port}`);
+    this.app.listen(process.env.PORT, () => {
+      console.log(`App listening on the port ${process.env.PORT}`);
     });
   }
 
