@@ -3,9 +3,6 @@ import * as bodyParser from 'body-parser';
 import errorMiddleware from './middleware/error.middleware';
 import Controller from './interfaces/controller.interface';
 
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-
 class App {
   public app: express.Application;
 
@@ -16,6 +13,10 @@ class App {
     this.initializeErrorHandling();
   }
 
+  public getServer(){
+    return this.app;
+  }
+
   public listen() {
     this.app.listen(process.env.PORT, () => {
       console.log(`App listening on the port ${process.env.PORT}`);
@@ -24,10 +25,6 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
-    this.app.use(logger('dev'));
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(cookieParser());
   }
 
   private initializeErrorHandling() {
