@@ -7,6 +7,7 @@ import Channel from "../entity/channel.entity";
 import HttpException from "../common/exceptions/HttpException";
 import ChannelService from "../service/channel.service";
 import CreateChannelMessageRequest from "../interfaces/request/create-channel-message.interface";
+import httpException from "../common/exceptions/HttpException";
 
 class ChannelController implements Controller {
     public path = '/channels';
@@ -41,9 +42,13 @@ class ChannelController implements Controller {
     private createMessage = async (request: express.Request, response: express.Response,next: express.NextFunction)=> {
         const channelId: string = request.params.id;
         const channelMessage :CreateChannelMessageRequest = request.body;
-        const message = await this.channelService.createMessage(Number(channelId), channelMessage);
-
-        response.status(200).send(message);
+        this.channelService.createMessage(Number(channelId), channelMessage)
+            .then((message)=>{
+                response.status(200).send(message);
+            })
+            .catch((error:HttpException) => {
+                response.status(error.status).send(error.message)
+            })
     }
 }
 

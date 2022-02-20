@@ -11,7 +11,7 @@ class ChannelService {
 
     public async createMessage (id: number, message: CreateChannelMessageRequest){
         const channel = await this.channelRepository.findOne({id});
-        if(_.isNull(channel)) {
+        if(_.isEmpty(channel)) {
             throw new HttpException(400, "channel id invalid.");
         }
         const channelMessage = this.messageRepository.create(message);

@@ -26,5 +26,24 @@ describe('The Massage Controller', () => {
                 .send(requestBody)
                 .expect(200);
         })
+
+        it('should return bad reques when create channel message to a invalid channel', async () => {
+            const channelController = new ChannelController();
+            const app = new App([
+                channelController,
+            ]);
+
+            const invalidChannel = "12312312";
+
+            const requestBody: CreateChannelMessageRequest = {
+                title: 'Jobs',
+                content: 'Good news, our company is hiring........'
+            };
+
+            await request(app.getServer())
+                .post(`${channelController.path}/${invalidChannel}/messages`)
+                .send(requestBody)
+                .expect(400);
+        })
     })
 });
