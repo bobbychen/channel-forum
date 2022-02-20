@@ -20,5 +20,20 @@ describe('The Channel Controller', () => {
                 .send(requestBody)
                 .expect(200);
         })
+
+        it('should return bad request when create channel with invalid name', async () => {
+            const channelController = new ChannelController();
+            const app = new App([
+                channelController,
+            ]);
+            const requestBody: CreateChannelRequest = {
+                name: ''
+            };
+
+            await request(app.getServer())
+                .post(`${channelController.path}`)
+                .send(requestBody)
+                .expect(400);
+        })
     })
 });

@@ -1,8 +1,10 @@
 import express from 'express';
+import _ from 'lodash';
 import { getRepository } from 'typeorm';
 import Controller from '../interfaces/controller.interface';
 import CreateChannelRequest from "../interfaces/request/create-channel.interface";
 import Channel from "../entity/channel.entity";
+import HttpException from "../common/exceptions/HttpException";
 
 class ChannelController implements Controller {
     public path = '/channels';
@@ -21,11 +23,15 @@ class ChannelController implements Controller {
         response.send({"title": "HelloWorld"});
     }
 
-    private create = async (request: express.Request, response: express.Response) =>{
+    private create = async (request: express.Request, response: express.Response,next: express.NextFunction) =>{
         const postData: CreateChannelRequest = request.body;
-        const newPost = this.Repository.create(postData);
-        await this.Repository.save(newPost);
-        response.send(newPost);
+        if(_.isEmpty(postData.name)) {
+            next(new HttpException(400, "channel name shoud not be empty."));
+        }else{
+            const newPost = this.Repository.create(postData);
+            await this.Repository.save(newPost);
+            response.send(newPost);
+        }
     };
 }
 
