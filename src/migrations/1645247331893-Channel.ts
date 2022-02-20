@@ -7,8 +7,7 @@ export class Channel1645247331893 implements MigrationInterface {
             name: "channel",
             columns: [
                 {name: "id", type: "int", isPrimary: true,isGenerated:true,generationStrategy:"increment"},
-                {name: "name", type: "varchar"},
-                {name: 'created_at', type: 'timestamp', default: 'now()'}
+                {name: "name", type: "varchar"}
             ]}
         ),true)
     }
