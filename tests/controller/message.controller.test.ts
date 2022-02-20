@@ -27,7 +27,7 @@ describe('The Massage Controller', () => {
                 .expect(200);
         })
 
-        it('should return bad reques when create channel message to a invalid channel', async () => {
+        it('should return bad request when create channel message to a invalid channel', async () => {
             const channelController = new ChannelController();
             const app = new App([
                 channelController,
@@ -42,6 +42,25 @@ describe('The Massage Controller', () => {
 
             await request(app.getServer())
                 .post(`${channelController.path}/${invalidChannel}/messages`)
+                .send(requestBody)
+                .expect(400);
+        })
+
+        it('should return bad request when create channel message with invalid body', async () => {
+            const channelController = new ChannelController();
+            const app = new App([
+                channelController,
+            ]);
+            const channel = getRepository(Channel).create({name:"Jobs"})
+            await getRepository(Channel).save(channel);
+
+            const requestBody: CreateChannelMessageRequest = {
+                title: '',
+                content: ''
+            };
+
+            await request(app.getServer())
+                .post(`${channelController.path}/${channel.id}/messages`)
                 .send(requestBody)
                 .expect(400);
         })

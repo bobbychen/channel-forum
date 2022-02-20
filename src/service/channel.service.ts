@@ -10,10 +10,14 @@ class ChannelService {
     private messageRepository = getRepository(Message);
 
     public async createMessage (id: number, message: CreateChannelMessageRequest){
+        if(_.isEmpty(message.title) || _.isEmpty(message.content)) {
+            throw new HttpException(400, "message body is invalid");
+        }
         const channel = await this.channelRepository.findOne({id});
         if(_.isEmpty(channel)) {
             throw new HttpException(400, "channel id invalid.");
         }
+
         const channelMessage = this.messageRepository.create(message);
         channelMessage.channelId = id;
         return await this.messageRepository.save(channelMessage);
