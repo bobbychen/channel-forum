@@ -22,6 +22,31 @@ class ChannelService {
         channelMessage.channelId = id;
         return await this.messageRepository.save(channelMessage);
     }
+
+    public async getMessages (id: number, page: number, size: number){
+        // const [data, count] = await this.messageRepository.findAndCount({
+        //     where: {channelId: id},
+        //     order: {createdAt: 'DESC'},
+        //     take:(page - 1) * size,
+        //     skip:size,
+        // });
+        // return {
+        //     data,
+        //     total: count,
+        //     page,
+        //     size,
+        // }
+        const {data,current_page,total} = await this.messageRepository.createQueryBuilder().setParameters({
+            page,
+            per_page: size
+        }).paginate();
+        return {
+            data,
+            size,
+            total,
+            page: current_page
+        }
+    }
 }
 
 export default ChannelService;

@@ -23,6 +23,7 @@ class ChannelController implements Controller {
         this.router.get(this.path, this.get);
         this.router.post(this.path, this.create);
         this.router.post(`${this.path}/:id/messages`, this.createMessage);
+        this.router.get(`${this.path}/:id/messages`, this.getMessages);
     }
     private get = (request: express.Request, response: express.Response) =>{
         response.send({"title": "HelloWorld"});
@@ -50,6 +51,17 @@ class ChannelController implements Controller {
                 response.status(error.status).send(error.message)
             })
     }
+
+    private getMessages = async (request: express.Request, response: express.Response,next: express.NextFunction)=>{
+        const channelId: string = request.params.id;
+        const {page, size} = request.query;
+        this.channelService.getMessages(Number(channelId), Number(page), Number(size))
+            .then((pageObj) =>{
+                response.status(200).send(pageObj);
+            }).catch((error:HttpException) => {
+            response.status(error.status).send(error.message)
+        })
+    };
 }
 
 export default ChannelController;

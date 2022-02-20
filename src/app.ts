@@ -2,6 +2,7 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import errorMiddleware from './middleware/error.middleware';
 import Controller from './interfaces/controller.interface';
+import {pagination} from 'typeorm-pagination'
 
 class App {
   public app: express.Application;
@@ -25,6 +26,7 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
+    this.app.use(pagination);
   }
 
   private initializeErrorHandling() {
